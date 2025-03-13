@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useLocation } from 'react-router-dom';
-import { getMachineData, loginService } from '../../../backservice/backservice';
+import { getMachineData, getMachineUser, loginService } from '../../../backservice/backservice';
+import { useNavigate } from 'react-router-dom';
 
 function MachindeData() {
   const isDarkMode = false;
 
   const [machineData, setMachineData] = useState({});
+  const [user,setUser] = useState("")
 
   const mstatus = ['STOP', 'RUNNING', 'IDLE', 'ABORTED'];
+
+  const navigate = useNavigate()
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -99,6 +103,9 @@ function MachindeData() {
       getMachineData(serialNumber).then((data) => {
         setMachineData(data);
       });
+      getMachineUser(serialNumber).then((data)=>{
+          setUser(data)
+      })
     };
 
     fetchdata();
@@ -112,6 +119,12 @@ function MachindeData() {
 
   return (
     <>
+      <div className='flex min-w-full justify-end'>
+        <h3>{user}</h3>
+        <button
+          onClick={() => { navigate("/audit?serial_number="+serialNumber) }}
+          className={`bg-blue-600 text-white p-2.5  rounded-lg`}>Audit Trail</button>
+      </div>
       <div className={`rounded-lg shadow-md p-3 mb-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} h-28 `}>
         <h6 className={`text-xl font-bold mb-1.5 flex justify-between items-center ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}>
           <span role="img" aria-label="chart" className={isDarkMode ? 'text-blue-500' : 'text-blue-600'}>

@@ -104,9 +104,7 @@ function Dashboard() {
           <h1 className={`text-4xl font-bold flex items-center ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}></h1>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
 
-              <div>
-                <button className={`bg-blue-600 text-white p-2.5 rounded-lg`}>Audit Trail</button>
-              </div>
+              
             {/* Welcome Message */}
             <div className={`p-3 rounded-lg shadow-sm flex items-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}
              hover:drop-shadow-xl`}>

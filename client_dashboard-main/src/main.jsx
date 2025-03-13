@@ -8,11 +8,15 @@ import store from './store/store.js';
 import Protected from './components/AuthLayout.jsx';
 import MachineList from './pages/Dashboard/components/MachineList.jsx';
 import MachindeData from './pages/Dashboard/components/MachindeData.jsx';
+import AuditTrail from './pages/AuditTrail.jsx';
 
 const router = createHashRouter([
   {
     path: '/login',
     element: <Login />,
+  },{
+    path:"/audit",
+    element:<AuditTrail />,
   },
   {
     path: '/',
