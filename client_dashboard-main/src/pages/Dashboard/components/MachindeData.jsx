@@ -119,8 +119,9 @@ function MachindeData() {
 
   return (
     <>
-      <div className='flex min-w-full justify-end'>
-        <h3>{user}</h3>
+     <div className='flex min-w-full justify-between'>
+     <button
+          className={`bg-blue-600 text-white p-2.5 rounded-lg`}>Active User :{user}</button>
         <button
           onClick={() => { navigate("/audit?serial_number="+serialNumber) }}
           className={`bg-blue-600 text-white p-2.5  rounded-lg`}>Audit Trail</button>
