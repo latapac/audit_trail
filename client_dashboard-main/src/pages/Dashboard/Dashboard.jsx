@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getMachines, logoutService } from '../../backservice/backservice';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
@@ -21,13 +21,16 @@ function Dashboard() {
   const queryParams = new URLSearchParams(location.search);
   const serialNumber = queryParams.get('serial_number');
 
-  const oeeValue = machineData?.d?.current_OEE ? Number(machineData.d.current_OEE).toFixed(2) : '0.00';
-  const performance = machineData?.d?.Performance ? Number(machineData.d.Performance).toFixed(2) : '0.00';
-  const availability = machineData?.d?.Availability ? Number(machineData.d.Availability).toFixed(2) : '0.00';
-  const quality = machineData?.d?.Quality ? Number(machineData.d.Quality).toFixed(2) : '0.00';
-  const Total_Production = machineData?.d?.Performance ? Number(machineData.d.Total_Production).toFixed(2) : '0.00';
-  const Good_Count = machineData?.d?.Availability ? Number(machineData.d.Good_Count).toFixed(2) : '0.00';
-  const Reject_Counters = machineData?.d?.Quality ? Number(machineData.d.Reject_Counters).toFixed(2) : '0.00';
+  // OEE Data
+  const oeeValue = 99;
+  const performance = 90;
+  const availability = 85;
+  const quality = 75;
+
+  // Production Data
+  const totalProduction = 480;
+  const goodProduction =  280;
+  const badProduction = 200;
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -75,7 +78,7 @@ function Dashboard() {
       <div>
         <div className='bg-blue-400 h-9'>
           <img src="" alt="" />
-          <p>PACMAC</p>
+          <p className='text-2xl'>PACMAC</p>
         </div>
       </div>
       <div className='flex flex-row justify-evenly bg-gray-200 mt-1'>
@@ -94,35 +97,36 @@ function Dashboard() {
         <div className='flex flex-col w-full gap-3'>
           <div className='flex flex-row justify-evenly'>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1><button className='bg-green-600 text-white pl-6 pr-6 pt-3 pb-3'>RUN</button></h1>RUN
+              <h1><button className='bg-green-600 text-white pl-9 pr-9 pt-2 text-2xl pb-2 rounded-md'>RUN</button></h1><p>Status</p>
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold text-yellow-600'>4500</h1>Total Production
+              <h1 className='text-3xl font-semibold text-yellow-600'>{totalProduction}</h1> <p>Total Production</p>
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold text-green-600'>4000</h1>Good Production
+              <h1 className='text-3xl font-semibold text-green-600'>{goodProduction}</h1> <p>Good Production</p> 
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold text-red-600'>500</h1>Bad Production
+              <h1 className='text-3xl font-semibold text-red-600'>{badProduction}</h1><p>Bad Production</p>
             </div>
           </div>
           <div className='flex flex-row justify-evenly'>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold'>Batch025</h1>Batch Number
+              <h1 className='text-3xl font-semibold'>Batch025</h1> <p>Batch Number</p>
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold'>67</h1>OEE
+              <h1 className='text-3xl font-semibold'>{oeeValue}</h1><p>OEE </p>
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold'>78</h1>Current Speed
+              <h1 className='text-3xl font-semibold'>78</h1> <p>Current Speed</p>
             </div>
             <div className='bg-white w-62 h-22 flex flex-col justify-center items-center'>
-              <h1 className='text-3xl font-semibold'>Pacmac</h1>Recipe Number
+              <h1 className='text-3xl font-semibold'>Pacmac</h1> <p>Recipe Number</p>
             </div>
           </div>
         </div>
       </div>
       <div className='flex flex-row w-screen h-40 gap-7 mt-16 ml-7'>
+        {/* OEE Graph */}
         <div className='bg-white w-[46vw] h-84 flex'>
           <div className={`rounded-lg shadow-md p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h3 className={`text-lg font-semibold md:text-xl mb-3 md:mb-4 text-center ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
@@ -185,29 +189,31 @@ function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Production Graph */}
         <div className='bg-white w-[46vw] h-84 flex'>
-        <div className={`rounded-lg shadow-md p-4 h-[50vh] w-[40vw] ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`rounded-lg shadow-md p-4 w-[40vw] ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h3 className={`text-lg font-semibold md:text-xl mb-3 md:mb-4 text-center ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-              Production Details
+              Production Overview
             </h3>
-            <div className="relative aspect-square max-h-56  w-40 mx-auto">
+            <div className="relative aspect-square max-h-96 mx-auto">
               <div className="absolute inset-0">
-                <Bar className='max-h-56  w-40 mx-auto'
+                <Bar className='w-[40vw]'
                   data={{
                     labels: ['Total Production', 'Good Production', 'Bad Production'],
                     datasets: [
                       {
-                        label: 'OEE Components',
-                        data: [Total_Production, Good_Count, Reject_Counters],
+                        label: 'Production',
+                        data: [totalProduction, goodProduction, badProduction],
                         backgroundColor: [
                           isDarkMode ? 'rgba(99, 102, 241, 0.8)' : 'rgba(59, 130, 246, 0.8)',
-                          isDarkMode ? 'rgba(244, 114, 182, 0.8)' : 'rgba(236, 72, 153, 0.8)',
                           isDarkMode ? 'rgba(52, 211, 153, 0.8)' : 'rgba(16, 185, 129, 0.8)',
+                          isDarkMode ? 'rgba(244, 114, 182, 0.8)' : 'rgba(236, 72, 153, 0.8)',
                         ],
                         borderColor: [
                           isDarkMode ? 'rgba(99, 102, 241, 1)' : 'rgba(59, 130, 246, 1)',
-                          isDarkMode ? 'rgba(244, 114, 182, 1)' : 'rgba(236, 72, 153, 1)',
                           isDarkMode ? 'rgba(52, 211, 153, 1)' : 'rgba(16, 185, 129, 1)',
+                          isDarkMode ? 'rgba(244, 114, 182, 1)' : 'rgba(236, 72, 153, 1)',
                         ],
                         borderWidth: 1,
                       },
@@ -219,7 +225,6 @@ function Dashboard() {
                     scales: {
                       y: {
                         beginAtZero: true,
-                        max: 100,
                         ticks: {
                           color: isDarkMode ? 'rgba(209, 213, 219, 1)' : 'rgba(75, 85, 99, 1)',
                         },
